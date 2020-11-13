@@ -8,7 +8,7 @@ GREEN := \e[32m
 #----------------------------------------------------------
 
 .PHONY: check
-check : unit-tests doc-tests type-check black-format flake8-lint sphinx success
+check : unit-tests black-format flake8-lint success
 
 .PHONY: unit-tests
 unit-tests :
@@ -37,13 +37,14 @@ black-format :
 	@echo -e '$(BLUE)black-format'
 	@echo -e 		'------------$(NO_COLOR)'
 	@black $(MODULE) -l $(LINE_LENGTH)
+	@black tests/*.py -l $(LINE_LENGTH)
 
 .PHONY: flake8-lint
 flake8-lint :
 	@echo
 	@echo -e '$(BLUE)flake8-lint'
 	@echo -e 		'-----------$(NO_COLOR)'
-	@flake8 ./*/*.py \
+	@flake8 $(MODULE) \
 		--max-line-length $(LINE_LENGTH) \
 		--ignore=F401,E731,F403 \
 		--count \

@@ -1,4 +1,5 @@
 import ast
+from ast import get_docstring
 from collections import namedtuple
 from typing import List
 
@@ -11,10 +12,7 @@ fnc_example = namedtuple(
 )
 
 
-filename = "docstring_to_readme/temp.py"
-
-
-# side-effecting functions
+# API
 # ---------------------------------------------------------
 def file_as_ast(filename: str) -> ast.Module:
     with open(filename) as fd:
@@ -22,7 +20,19 @@ def file_as_ast(filename: str) -> ast.Module:
     return ast.parse(file_contents)
 
 
-# level
+def module_to_sections(module: ast.Module) -> str:
+    fncs = get_fncs_and_docstrs(module)
+    sections = []
+
+    for fnc in fncs:
+        section = create_section(fnc)
+        if section:
+            sections.append(section)
+
+    return "\n\n".join(sections)
+
+
+# functions that operate on AST objects
 # ---------------------------------------------------------
 def get_fncs_and_docstrs(
     module: ast.Module,
@@ -30,16 +40,10 @@ def get_fncs_and_docstrs(
     fncs = functions_from_ast(module)
 
     return [
-        fnc_example(fnc_name(fnc), fnc_exampleing(fnc))
+        fnc_example(fnc_name(fnc), fnc_docstring(fnc))
         for fnc in fncs
     ]
 
-
-# functions that operate on AST objects
-# ---------------------------------------------------------
-"""
-Functions should define a README section like `### fnc_name`
-"""
 
 def functions_from_ast(
     module: ast.Module,
@@ -55,10 +59,11 @@ def fnc_name(fnc: ast.FunctionDef) -> str:
     return fnc.name
 
 
-def fnc_exampleing(fnc: ast.FunctionDef, dialect: str = "rst") -> str:
+def fnc_docstring(
+    fnc: ast.FunctionDef, dialect: str = "rst"
+) -> str:
     return example_from_docstring(
-        ast.get_docstring(fnc),
-        dialect
+        ast.get_docstring(fnc), dialect
     )
 
 
@@ -71,6 +76,30 @@ including a way to create a link to that section
 """
 
 
+def create_section(sect_obj: fnc_example) -> str:
+    header = name_to_title(sect_obj.name, indent=3)
+    codeblock = example_to_codeblock(sect_obj.example)
+
+    if not codeblock:
+        return ""
+
+    return header + "\n" + codeblock
+
+
+def example_to_codeblock(example: str) -> str:
+    if not example:
+        return ""
+
+    before = "```python\n"
+    after = "\n```"
+    return before + example + after
+
+
+def name_to_title(name: str, indent: int) -> str:
+    section = "#" * indent + " "
+    return section + name
+
+
 # functions that operate on docstrings
 # ---------------------------------------------------------
 def example_from_docstring(
@@ -79,7 +108,7 @@ def example_from_docstring(
     if dialect == "rst":
         return rst(docstring)
     else:
-        raise NotImplemented(
+        raise NotImplementedError(
             "Dialect '{}' not implemented".format(dialect)
         )
 
@@ -109,7 +138,7 @@ def rst(docstring: str) -> str:
             continue
         block_indent = len(line) - len(line.lstrip())
         break
-    
+
     output = []
     for line in lines_wo_rst:
         if line == "":  # must be a newline
