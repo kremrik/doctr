@@ -4,7 +4,7 @@ from collections import namedtuple
 from typing import List
 
 
-# https://gabrielelanaro.github.io/blog/2014/12/12/extract-docstrings.html
+__all__ = ["file_as_ast", "module_to_sections"]
 
 
 fnc_example = namedtuple(
