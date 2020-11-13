@@ -3,6 +3,9 @@ from collections import namedtuple
 from typing import List
 
 
+# https://gabrielelanaro.github.io/blog/2014/12/12/extract-docstrings.html
+
+
 fnc_example = namedtuple(
     "fnc_example", ["name", "example"]
 )
