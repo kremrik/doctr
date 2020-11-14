@@ -1,15 +1,6 @@
 import ast
-from ast import get_docstring
-from collections import namedtuple
-from typing import List
-
-
-__all__ = ["file_as_ast", "module_to_sections"]
-
-
-fnc_example = namedtuple(
-    "fnc_example", ["name", "example"]
-)
+import re
+from typing import List, Tuple
 
 
 # API
@@ -21,27 +12,25 @@ def file_as_ast(filename: str) -> ast.Module:
 
 
 def module_to_sections(module: ast.Module) -> str:
-    fncs = get_fncs_and_docstrs(module)
-    sections = []
+    section_components = get_names_and_docstrings(module)
 
-    for fnc in fncs:
-        section = create_section(fnc)
-        if section:
-            sections.append(section)
+    sections = [
+        create_section(*sc) for sc in section_components
+    ]
 
-    return "\n\n".join(sections)
+    return "\n\n".join([s for s in sections if s])
 
 
-# functions that operate on AST objects
+# get names and docstrings from ast object
 # ---------------------------------------------------------
-def get_fncs_and_docstrs(
+def get_names_and_docstrings(
     module: ast.Module,
-) -> List[fnc_example]:
-    fncs = functions_from_ast(module)
+) -> List[Tuple[str, str]]:
+    functions = functions_from_ast(module)
 
     return [
-        fnc_example(fnc_name(fnc), fnc_docstring(fnc))
-        for fnc in fncs
+        (fnc_name(fnc), fnc_docstring(fnc))
+        for fnc in functions
     ]
 
 
@@ -59,34 +48,37 @@ def fnc_name(fnc: ast.FunctionDef) -> str:
     return fnc.name
 
 
-def fnc_docstring(
-    fnc: ast.FunctionDef, dialect: str = "rst"
-) -> str:
-    return example_from_docstring(
-        ast.get_docstring(fnc), dialect
-    )
+def fnc_docstring(fnc: ast.FunctionDef) -> str:
+    return ast.get_docstring(fnc)
 
 
-# functions that operate on fnc_example objects
+# function to create a section from name and docstring
 # ---------------------------------------------------------
-"""
-These functions should do something to convert a
-`fnc_example` to a section in a markdown README, possibly
-including a way to create a link to that section
-"""
+def create_section(name: str, docstring: str) -> str:
+    header = name_to_title(name)
+    preamble = preamble_from_docstring(docstring)
+    codeblock = example_to_codeblock(docstring)
 
-
-def create_section(sect_obj: fnc_example) -> str:
-    header = name_to_title(sect_obj.name, indent=3)
-    codeblock = example_to_codeblock(sect_obj.example)
-
-    if not codeblock:
+    if not preamble and not codeblock:
         return ""
 
-    return header + "\n" + codeblock
+    if preamble and not codeblock:
+        return header + "\n" + preamble
+
+    if codeblock and not preamble:
+        return header + "\n\n" + codeblock
+
+    return header + "\n" + preamble + "\n\n" + codeblock
 
 
-def example_to_codeblock(example: str) -> str:
+def name_to_title(name: str, indent: int = 3) -> str:
+    section = "#" * indent + " "
+    return section + name
+
+
+def example_to_codeblock(docstring: str) -> str:
+    example = example_from_docstring(docstring)
+
     if not example:
         return ""
 
@@ -95,25 +87,34 @@ def example_to_codeblock(example: str) -> str:
     return before + example + after
 
 
-def name_to_title(name: str, indent: int) -> str:
-    section = "#" * indent + " "
-    return section + name
-
-
 # functions that operate on docstrings
 # ---------------------------------------------------------
+# https://stackoverflow.com/questions/13209288/split-string-based-on-regex
+RST_BLOCKS = re.compile(r"[\n](?=[A-Z][a-z]+:\n)")
+RST_SECTION = re.compile(r"[A-Z][a-z]+:\n")
+
+
+def preamble_from_docstring(docstring: str) -> str:
+    split_by_block = RST_BLOCKS.split(docstring)
+    first_chunk = split_by_block[0]
+
+    if RST_SECTION.match(first_chunk):
+        return ""
+    return first_chunk.strip()
+
+
 def example_from_docstring(
-    docstring: str, dialect: str
+    docstring: str, dialect: str = "rst"
 ) -> str:
     if dialect == "rst":
-        return rst(docstring)
+        return rst_example(docstring)
     else:
         raise NotImplementedError(
             "Dialect '{}' not implemented".format(dialect)
         )
 
 
-def rst(docstring: str) -> str:
+def rst_example(docstring: str) -> str:
     examples_block = "Examples:"
     hlite = ".. highlight::"
     cbloc = ".. code-block::"
@@ -126,21 +127,21 @@ def rst(docstring: str) -> str:
 
     examples = docstring.split(examples_block)[1]
 
-    lines_wo_rst = [
+    lines_wo_rst_example = [
         line
         for line in examples.split("\n")
         if hlite not in line and cbloc not in line
     ]
 
     block_indent = None
-    for line in lines_wo_rst:
+    for line in lines_wo_rst_example:
         if not line:
             continue
         block_indent = len(line) - len(line.lstrip())
         break
 
     output = []
-    for line in lines_wo_rst:
+    for line in lines_wo_rst_example:
         if line == "":  # must be a newline
             output.append(line)
             continue
@@ -153,4 +154,5 @@ def rst(docstring: str) -> str:
         if indent >= block_indent:
             output.append(line[block_indent:])
 
-    return "\n".join(output).strip()
+    output = "\n".join(output).strip()
+    return output

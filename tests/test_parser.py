@@ -14,6 +14,7 @@ def fnc():
     pass
 '''
 
+
 FNC_EXAMPLE = '''
 def fnc():
     """
@@ -61,29 +62,47 @@ def fnc():
     pass
 '''
 
+PREAMBLE_EXAMPLE = '''
+def fnc():
+    """
+    This is fnc
+
+    Examples:
+        >>> import json
+        >>> print(json)
+    """
+    pass
+'''
+
 
 class test_module_to_sections(unittest.TestCase):
     def test_wo_example(self):
         module = ast.parse(FNC_NO_EXAMPLE)
-        gold = ""
+        gold = "### fnc\nno example"
         output = module_to_sections(module)
         self.assertEqual(gold, output)
 
     def test_example(self):
         module = ast.parse(FNC_EXAMPLE)
-        gold = "### fnc\n```python\n>>> import json\n>>> print(json)\n```"
+        gold = "### fnc\n\n```python\n>>> import json\n>>> print(json)\n```"
         output = module_to_sections(module)
         self.assertEqual(gold, output)
 
     def test_multi_example(self):
         module = ast.parse(MODULE_EXAMPLE)
-        gold = "### fnc\n```python\n>>> import json\n>>> print(json)\n```\n\n### fnc2\n```python\n>>> import json\n>>> print(json)\n```"
+        gold = "### fnc\n\n```python\n>>> import json\n>>> print(json)\n```\n\n### fnc2\n\n```python\n>>> import json\n>>> print(json)\n```"
         output = module_to_sections(module)
         self.assertEqual(gold, output)
 
     def test_rst_example(self):
         module = ast.parse(RST_EXAMPLE)
-        gold = "### fnc\n```python\n>>> import json\n>>> print(json)\n```"
+        gold = "### fnc\n\n```python\n>>> import json\n>>> print(json)\n```"
+        output = module_to_sections(module)
+        self.assertEqual(gold, output)
+
+    def test_preamble_example(self):
+        module = ast.parse(PREAMBLE_EXAMPLE)
+        gold = "### fnc\nThis is fnc\n\n```python\n>>> import json\n>>> print(json)\n```"
         output = module_to_sections(module)
         self.assertEqual(gold, output)
 

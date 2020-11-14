@@ -1,5 +1,7 @@
 def coerce():
     """
+    `coerce` is meant to do things.
+
     Examples:
         .. highlight:: python
         .. code-block:: python
@@ -45,4 +47,17 @@ def temp2():
 
 
 def temp3():
+    pass
+
+
+def temp4():
+    """
+    Examples:
+        .. highlight:: python
+        .. code-block:: python
+
+            >>> from json import dumps
+            >>> print(dumps)
+            <function dumps at 0x7f63d1725d30>
+    """
     pass
