@@ -22,7 +22,7 @@ doc-tests :
 	@echo
 	@echo -e '$(BLUE)doc-tests'
 	@echo -e        '---------$(NO_COLOR)'
-	@python3 -m doctest $(MODULE)/*.py && echo 0
+	@python3 -m doctest $(MODULE)/parser.py && echo 0
 
 .PHONY: type-check
 type-check :
@@ -46,7 +46,7 @@ flake8-lint :
 	@echo -e 		'-----------$(NO_COLOR)'
 	@flake8 $(MODULE) \
 		--max-line-length $(LINE_LENGTH) \
-		--ignore=F401,E731,F403 \
+		--ignore=F401,E731,F403,E501 \
 		--count \
 		|| exit 1
 

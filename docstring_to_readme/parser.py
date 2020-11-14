@@ -6,12 +6,27 @@ from typing import List, Tuple
 # API
 # ---------------------------------------------------------
 def file_as_ast(filename: str) -> ast.Module:
+    """
+    Function to convert a file to an AST object
+    """
+
     with open(filename) as fd:
         file_contents = fd.read()
     return ast.parse(file_contents)
 
 
 def module_to_sections(module: ast.Module) -> str:
+    """
+    Function to convert an AST module to Markdown sections
+
+    Examples:
+        >>> from docstring_to_readme.parser import module_to_sections
+        >>> import ast
+        >>> module = ast.parse("def fnc():\\n    '''hello'''\\n    pass")
+        >>> module_to_sections(module)
+        '### fnc\\nhello'
+    """
+
     section_components = get_names_and_docstrings(module)
 
     sections = [
@@ -95,6 +110,9 @@ RST_SECTION = re.compile(r"[A-Z][a-z]+:\n")
 
 
 def preamble_from_docstring(docstring: str) -> str:
+    if not docstring:
+        return ""
+
     split_by_block = RST_BLOCKS.split(docstring)
     first_chunk = split_by_block[0]
 
