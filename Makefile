@@ -8,7 +8,7 @@ GREEN := \e[32m
 #----------------------------------------------------------
 
 .PHONY: check
-check : unit-tests black-format flake8-lint success
+check : unit-tests doc-tests code-coverage black-format flake8-lint success
 
 .PHONY: unit-tests
 unit-tests :
@@ -23,6 +23,13 @@ doc-tests :
 	@echo -e '$(BLUE)doc-tests'
 	@echo -e        '---------$(NO_COLOR)'
 	@python3 -m doctest $(MODULE)/parser.py && echo 0
+
+.PHONY: code-coverage
+code-coverage : cov
+	@echo
+	@echo -e '$(BLUE)code-coverage'
+	@echo -e 		'-------------$(NO_COLOR)'
+	@coverage-badge -f -o images/coverage.svg
 
 .PHONY: type-check
 type-check :
@@ -66,9 +73,12 @@ success :
 
 #----------------------------------------------------------
 
+.PHONY: cov
+cov:
+	@python -m pytest --cov=$(MODULE) --cov-config=.coveragerc --cov-report html
+
 .PHONY: coverage
-coverage: 
-	@pytest --cov=$(MODULE) --cov-config=.coveragerc --cov-report html
+coverage: cov
 	@python3 -m http.server 8000 --directory htmlcov/
 
 .PHONY: docs
