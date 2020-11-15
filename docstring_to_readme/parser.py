@@ -24,7 +24,7 @@ def module_to_sections(module: ast.Module) -> str:
         >>> import ast
         >>> module = ast.parse("def fnc():\\n    '''hello'''\\n    pass")
         >>> module_to_sections(module)
-        '### fnc\\nhello'
+        '### `fnc`\\nhello'
     """
 
     section_components = get_names_and_docstrings(module)
@@ -88,7 +88,7 @@ def create_section(name: str, docstring: str) -> str:
 
 def name_to_title(name: str, indent: int = 3) -> str:
     section = "#" * indent + " "
-    return section + name
+    return section + "`{}`".format(name)
 
 
 def example_to_codeblock(docstring: str) -> str:
