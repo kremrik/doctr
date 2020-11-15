@@ -107,56 +107,5 @@ class test_module_to_sections(unittest.TestCase):
         self.assertEqual(gold, output)
 
 
-@unittest.skip("implementation details")
-class test_example_from_docstring(unittest.TestCase):
-    def test_no_defined(self):
-        docstring = "No examples!"
-        gold = ""
-        output = example_from_docstring(docstring, "rst")
-        self.assertEqual(gold, output)
-
-    def test_one_line(self):
-        docstring = "Examples:\n    >>> import json\n"
-        gold = ">>> import json"
-        output = example_from_docstring(docstring, "rst")
-        self.assertEqual(gold, output)
-
-    def test_multi_line(self):
-        docstring = "Examples:\n    >>> import json\n    >>> print(json)\n"
-        gold = ">>> import json\n>>> print(json)"
-        output = example_from_docstring(docstring, "rst")
-        self.assertEqual(gold, output)
-
-    def test_multi_line_with_extra_indents(self):
-        docstring = "Examples:\n    >>> for i in [1, 2]:\n    ... print(i)\n"
-        gold = ">>> for i in [1, 2]:\n... print(i)"
-        output = example_from_docstring(docstring, "rst")
-        self.assertEqual(gold, output)
-
-    def test_simple_with_extra_rst_formatters(self):
-        docstring = "Examples:\n    .. highlight:: python\n    .. code-block:: python\n\n        >>> import json"
-        gold = ">>> import json"
-        output = example_from_docstring(docstring, "rst")
-        self.assertEqual(gold, output)
-
-
-@unittest.skip("implementation details")
-class test_example_to_codeblock(unittest.TestCase):
-    def test(self):
-        example = ">>> import json"
-        gold = "```python\n>>> import json\n```"
-        output = example_to_codeblock(example)
-        self.assertEqual(gold, output)
-
-
-@unittest.skip("implementation details")
-class test_name_to_title(unittest.TestCase):
-    def test(self):
-        name = "cool_fnc"
-        gold = "### cool_fnc"
-        output = name_to_title(name, 3)
-        self.assertEqual(gold, output)
-
-
 if __name__ == "__main__":
     unittest.main()
