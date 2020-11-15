@@ -32,14 +32,6 @@ def cli_parser(arguments: List[str]) -> argparse.Namespace:
         help="The section after which to append docs",
     )
 
-    parser.add_argument(
-        "-l",
-        "--level",
-        required=False,
-        default=3,
-        help="The number of '#' to use for each section",
-    )
-
     return parser.parse_args(arguments)
 
 
