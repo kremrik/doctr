@@ -1,6 +1,12 @@
 # Testing Markdown Crap
 
-#### `module.function_1`
+### `module.function_1`
+_Parameters:_<br>
+**arg1** (`int`) - An integer<br>
+**arg2** (`int`) - Another integer<br>
+_Returns:_<br>
+(`int`) - Yet another integer
+
 This function does some things. Here's an example:
 
 ```python
@@ -9,16 +15,9 @@ This function does some things. Here's an example:
 3
 ```
 
-_Parameters:_<br>
-**arg1** (`int`) - An integer<br>
-**arg2** (`int`) - Another integer
-
-_Returns:_<br>
-(`int`) - Yet another
-
 ---
 
-#### `module.function_2`
+### `module.function_2`
 This function does some different things. Here's an example:
 
 ```python
