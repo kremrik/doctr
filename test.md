@@ -16,6 +16,7 @@ _Parameters:_<br>
 _Returns:_<br>
 (`int`) - Yet another
 
+---
 
 #### `module.function_2`
 This function does some different things. Here's an example:
