@@ -1,34 +1,17 @@
-# Testing Markdown Crap
+# docstring-to-readme
+![coverage](images/coverage.svg)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-### `module.function_1`
-_Parameters:_<br>
-**arg1** (`int`) - An integer<br>
-**arg2** (`int`) - Another integer<br>
-_Returns:_<br>
-(`int`) - Yet another integer
+### Function [`file_as_ast`](./docstring_to_readme/parser.py)
+Function to convert a file to an AST object
 
-This function does some things. Here's an example:
-
-```python
->>> from module import function_1
->>> function_1(1, 2)
-3
-```
-
----
-
-### `module.function_2`
-This function does some different things. Here's an example:
+### Function [`module_to_sections`](./docstring_to_readme/parser.py)
+Function to convert an AST module to Markdown sections
 
 ```python
->>> from module import function_2
->>> function_2(1, 2)
--1
+>>> from docstring_to_readme.parser import module_to_sections
+>>> import ast
+>>> module = ast.parse("def fnc():\n    '''hello'''\n    pass")
+>>> module_to_sections(module)
+'#### `fnc`\nhello'
 ```
-
-_Parameters:_<br>
-**arg1** (`int`) - An integer<br>
-**arg2** (`int`) - Another integer
-
-_Returns:_<br>
-(`int`) - Yet another
