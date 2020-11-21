@@ -2,7 +2,7 @@
 ![coverage](images/coverage.svg)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-## Module `docstring_to_readme`
+## Module [`docstring_to_readme`](./docstring_to_readme)
 
 #### Function [`file_as_ast`](./docstring_to_readme/parser.py#L8)
 Function to convert a file to an AST object
