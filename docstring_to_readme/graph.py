@@ -51,8 +51,18 @@ def gt(node1: dict, node2: dict) -> bool:
     return _count_hash(node1) > _count_hash(node2)
 
 
+def lt(node1: dict, node2: dict) -> bool:
+    return _count_hash(node1) < _count_hash(node2)
+
+
 def eq(node1: dict, node2: dict) -> bool:
     return _count_hash(node1) == _count_hash(node2)
+
+
+def truth_value(node: dict) -> bool:
+    if not node_body(node) and not node_children(node):
+        return False
+    return True
 
 
 def _count_hash(node: dict) -> int:

@@ -2,8 +2,6 @@ from docstring_to_readme import graph as g
 
 
 def replace_at_root(graph1: dict, graph2: dict) -> dict:
-    # cases not involving child nodes
-    # -------------------------------
     if not graph1:
         return graph2
 
@@ -20,11 +18,35 @@ def replace_at_root(graph1: dict, graph2: dict) -> dict:
     ):
         return graph2
 
-    # CASE 1: graph2 more # than graph1
-    if g.gt(graph2, graph1):
-        return graph1
+    # graph2 less # than graph1, instant falsy return
+    if g.lt(graph2, graph1):
+        return {}
 
+    # already know pretty sections don't match, and so if
+    # these two graphs are on the same level, we can safely
+    # assume that graph2 needs to be added
+    if g.eq(graph1, graph2):
+        return {}
+
+    children = []
+    add_graph2 = True
     for child in g.node_children(graph1):
-        # CASE 2: graph2 needs to replace a child of graph1
-        # CASE 3: graph2 needs to be added as a child of graph1
-        pass
+        res = replace_at_root(child, graph2)
+        if res and g.truth_value(res):
+            children.append(res)
+            add_graph2 = False
+
+        elif res and not g.truth_value(res):
+            add_graph2 = False
+        else:
+            children.append(child)
+
+    if add_graph2 and g.gt(graph2, graph1):
+        children.append(graph2)
+
+    return g.node(
+        section=g.node_section(graph1),
+        pretty_section=g.node_p_section(graph1),
+        body=g.node_body(graph1),
+        children=children,
+    )
