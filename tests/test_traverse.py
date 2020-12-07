@@ -4,44 +4,6 @@ from json import dumps
 
 
 class test_replace_at_root(unittest.TestCase):
-    def test_null_both(self):
-        graph1 = {}
-        graph2 = {}
-        gold = {}
-        output = replace_at_root(graph1, graph2)
-        self.assertEqual(gold, output)
-
-    @unittest.skip("")
-    def test_null_left(self):
-        graph1 = {}
-        graph2 = {
-            "section": "# Title",
-            "pretty_section": "# Title",
-            "body": "Some text",
-            "children": [],
-        }
-        gold = {
-            "section": "# Title",
-            "pretty_section": "# Title",
-            "body": "Some text",
-            "children": [],
-        }
-        output = replace_at_root(graph1, graph2)
-        self.assertEqual(gold, output)
-
-    @unittest.skip("")
-    def test_null_right(self):
-        graph1 = {
-            "section": "# Title",
-            "pretty_section": "# Title",
-            "body": "Some text",
-            "children": [],
-        }
-        graph2 = {}
-        gold = {}
-        output = replace_at_root(graph1, graph2)
-        self.assertEqual(gold, output)
-
     def test_same_graph(self):
         graph1 = {
             "section": "# Title",
@@ -195,7 +157,13 @@ class test_replace_at_root(unittest.TestCase):
         output = replace_at_root(graph1, graph2)
         self.assertEqual(gold, output)
 
-    def test_child_node_added_deep_nesting_bottom(self):
+    def test_child_node_added_at_end_deep_nesting(self):
+        """
+        If we encounter a brand new node, the desired
+        behavior is to append to the end of the root
+        graph's children
+        """
+
         graph1 = {
             "section": "# Title",
             "pretty_section": "# Title",
@@ -238,20 +206,20 @@ class test_replace_at_root(unittest.TestCase):
                             "body": "text",
                             "children": [],
                         },
-                        {
-                            "section": "### Subtitle 2",
-                            "pretty_section": "### Subtitle 2",
-                            "body": "text",
-                            "children": [],
-                        },
                     ],
-                }
+                },
+                {
+                    "section": "### Subtitle 2",
+                    "pretty_section": "### Subtitle 2",
+                    "body": "text",
+                    "children": [],
+                },
             ],
         }
         output = replace_at_root(graph1, graph2)
         self.assertEqual(gold, output)
 
-    def test_child_node_added_deep_middle(self):
+    def test_child_node_added_at_end_deep_middle(self):
         graph1 = {
             "section": "# Title",
             "pretty_section": "# Title",
