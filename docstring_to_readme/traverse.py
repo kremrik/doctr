@@ -1,7 +1,5 @@
 from docstring_to_readme import graph as g
 
-from typing import Any
-
 
 __all__ = ["replace_at_root"]
 
@@ -60,7 +58,7 @@ def update_node(
 
 
 def _modify(
-    mod_graph: dict, mod_with: dict, on_eq: Any
+    mod_graph: dict, mod_with: dict, on_eq: dict
 ) -> dict:
     if g.node_p_section(mod_graph) == g.node_p_section(
         mod_with
