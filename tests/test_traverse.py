@@ -1,6 +1,5 @@
 from docstring_to_readme.traverse import replace_at_root
 import unittest
-from json import dumps
 
 
 class test_replace_at_root(unittest.TestCase):
