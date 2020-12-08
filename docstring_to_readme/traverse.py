@@ -1,5 +1,10 @@
 from docstring_to_readme import graph as g
 
+from typing import Any
+
+
+__all__ = ["replace_at_root"]
+
 
 def replace_at_root(graph1: dict, graph2: dict) -> dict:
     if graph1 == graph2:
@@ -37,45 +42,43 @@ def contains(search_graph: dict, find_graph: dict) -> bool:
 def remove_node(
     remove_from: dict, target_node: dict
 ) -> dict:
-    if g.node_p_section(remove_from) == g.node_p_section(
-        target_node
-    ):
-        return {}
-
-    children = g.node_children(remove_from)
-    new_children = []
-
-    for child in children:
-        res = remove_node(child, target_node)
-        if res:
-            new_children.append(res)
-
-        return g.node(
-            section=g.node_section(remove_from),
-            body=g.node_body(remove_from),
-            children=new_children,
-        )
-
-    return remove_from
+    return _modify(
+        mod_graph=remove_from,
+        mod_with=target_node,
+        on_eq={},
+    )
 
 
 def update_node(
     update_in: dict, target_node: dict
 ) -> dict:
-    if g.node_p_section(update_in) == g.node_p_section(
-        target_node
-    ):
-        return target_node
+    return _modify(
+        mod_graph=update_in,
+        mod_with=target_node,
+        on_eq=target_node,
+    )
 
-    children = g.node_children(update_in)
+
+def _modify(
+    mod_graph: dict, mod_with: dict, on_eq: Any
+) -> dict:
+    if g.node_p_section(mod_graph) == g.node_p_section(
+        mod_with
+    ):
+        return on_eq
+
+    children = g.node_children(mod_graph)
     new_children = []
 
     for child in children:
-        res = update_node(child, target_node)
-        new_children.append(res)
+        res = _modify(child, mod_with, on_eq)
+        if res:
+            new_children.append(res)
 
         return g.node(
-            section=g.node_section(update_in),
-            body=g.node_body(update_in),
+            section=g.node_section(mod_graph),
+            body=g.node_body(mod_graph),
             children=new_children,
         )
+
+    return mod_with
