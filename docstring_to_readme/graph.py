@@ -3,7 +3,7 @@ from typing import List, Optional
 
 # graph node abstraction
 # ---------------------------------------------------------
-def node(
+def Node(
     section: Optional[str] = "",
     pretty_section: Optional[str] = "",
     body: Optional[str] = "",
@@ -36,6 +36,17 @@ def node_body(node: dict) -> str:
 
 def node_children(node: dict) -> dict:
     return node["children"]
+
+
+# non-mutating mutators
+# ---------------------------------------------------------
+def add_children(node: dict, children: List[dict]) -> dict:
+    return Node(
+        section=node_section(node),
+        pretty_section=node_p_section(node),
+        body=node_body(node),
+        children=node_children(node) + children,
+    )
 
 
 # combinations of accessors

@@ -1,10 +1,10 @@
 from docstring_to_readme import graph as g
 
 
-__all__ = ["replace_at_root"]
+__all__ = ["update"]
 
 
-def replace_at_root(graph1: dict, graph2: dict) -> dict:
+def update(graph1: dict, graph2: dict) -> dict:
     if graph1 == graph2:
         return {}
 
@@ -12,7 +12,7 @@ def replace_at_root(graph1: dict, graph2: dict) -> dict:
         children = g.node_children(graph1)
         children.append(graph2)
 
-        return g.node(
+        return g.Node(
             section=g.node_section(graph1),
             body=g.node_body(graph1),
             children=children,
@@ -73,7 +73,7 @@ def _modify(
         if res:
             new_children.append(res)
 
-        return g.node(
+        return g.Node(
             section=g.node_section(mod_graph),
             body=g.node_body(mod_graph),
             children=new_children,

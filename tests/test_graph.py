@@ -1,5 +1,5 @@
 from docstring_to_readme.graph import (
-    node,
+    Node,
     node_section,
     node_body,
     node_children,
@@ -9,31 +9,31 @@ import unittest
 
 class test_node(unittest.TestCase):
     def test_falsy_bool(self):
-        graph = node()
+        graph = Node()
         self.assertFalse(graph)
 
     def test_truthy_bool(self):
-        graph = node("# Title")
+        graph = Node("# Title")
         self.assertTrue(graph)
 
     def test_falsy_equality(self):
-        g1 = node()
-        g2 = node()
+        g1 = Node()
+        g2 = Node()
         self.assertEqual(g1, g2)
 
     def test_truthy_equality(self):
-        g1 = node("# Title")
-        g2 = node("# Title")
+        g1 = Node("# Title")
+        g2 = Node("# Title")
         self.assertEqual(g1, g2)
 
     def test_truthy_equality_with_children(self):
-        g1 = node("# Title", children=node("## Subtitle"))
-        g2 = node("# Title", children=node("## Subtitle"))
+        g1 = Node("# Title", children=Node("## Subtitle"))
+        g2 = Node("# Title", children=Node("## Subtitle"))
         self.assertEqual(g1, g2)
 
     def test_falsy_equality_with_children(self):
-        g1 = node("# Title", children=node("## Subtitle"))
-        g2 = node("# Title", children=node("## OOPS"))
+        g1 = Node("# Title", children=Node("## Subtitle"))
+        g2 = Node("# Title", children=Node("## OOPS"))
         self.assertNotEqual(g1, g2)
 
 

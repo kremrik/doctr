@@ -1,8 +1,8 @@
-from docstring_to_readme.traverse import replace_at_root
+from docstring_to_readme.traverse import update
 import unittest
 
 
-class test_replace_at_root(unittest.TestCase):
+class test_update(unittest.TestCase):
 
     # @unittest.skip("")
     def test_same_graph(self):
@@ -19,7 +19,7 @@ class test_replace_at_root(unittest.TestCase):
             "children": [],
         }
         gold = {}
-        output = replace_at_root(graph1, graph2)
+        output = update(graph1, graph2)
         self.assertEqual(gold, output)
 
     # @unittest.skip("")
@@ -62,7 +62,7 @@ class test_replace_at_root(unittest.TestCase):
                 },
             ],
         }
-        output = replace_at_root(graph1, graph2)
+        output = update(graph1, graph2)
         self.assertEqual(gold, output)
 
     # @unittest.skip("")
@@ -92,7 +92,7 @@ class test_replace_at_root(unittest.TestCase):
             "body": "",
             "children": [],
         }
-        output = replace_at_root(graph1, graph2)
+        output = update(graph1, graph2)
         self.assertEqual(gold, output)
 
     # @unittest.skip("")
@@ -129,7 +129,7 @@ class test_replace_at_root(unittest.TestCase):
                 }
             ],
         }
-        output = replace_at_root(graph1, graph2)
+        output = update(graph1, graph2)
         self.assertEqual(gold, output)
 
 
