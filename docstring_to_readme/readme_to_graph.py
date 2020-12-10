@@ -35,13 +35,13 @@ def indices_to_groups(
     output = []
 
     for idx, sect_pos in enumerate(indices):
-        next_idx = None
+        bgn = sect_pos + 1
+        end = None
         if idx < len(indices) - 1:
-            next_idx = indices[idx + 1] - 1
+            end = indices[idx + 1] - 1
 
         section = lines[sect_pos]
-        bgn = sect_pos + 1
-        body = "\n".join(lines[bgn:next_idx])
+        body = "\n".join(lines[bgn:end])
 
         output.append((section, body))
 
