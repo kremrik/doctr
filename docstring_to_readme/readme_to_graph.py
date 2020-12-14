@@ -1,24 +1,19 @@
-from docstring_to_readme.graph import Node
+from docstring_to_readme import graph as g
 
+from collections import deque
 from typing import List, Tuple
-
-
-def load():
-    pass
 
 
 def loads(readme: str) -> dict:
     if not readme:
-        return Node(section="$root")
+        return root_node()
 
-    if not readme.lstrip().startswith("#"):
-        return {}
-
-    lines = readme.strip().split("\n")
-
-    for line in lines:
-        if line.startswith("#"):
-            pass
+    lines = [line.lstrip() for line in readme.split("\n")]
+    indices = section_indices(lines)
+    groups = indices_to_groups(lines, indices)
+    nodes = groups_to_nodes(groups)
+    graph = nodes_to_graph(nodes)
+    return graph
 
 
 def section_indices(lines: List[str]) -> List[int]:
@@ -53,6 +48,52 @@ def groups_to_nodes(
 ) -> List[dict]:
     # TODO: handle pretty_section
     return [
-        Node(section=group[0], body=group[1])
+        g.Node(section=group[0], body=group[1])
         for group in groups
     ]
+
+
+def nodes_to_graph(nodes: List[dict]) -> dict:
+    nodes = deque(nodes)
+    node_stack = [root_node()]
+    children_stack = [[]]
+
+    while nodes:
+        this = nodes.popleft()
+        next = nodes[0] if len(nodes) else {}
+
+        if not node_stack:
+            # print(1)
+            node_stack.append(this)
+        elif not next or g.level(next) == g.level(this):
+            # print(2)
+            children_stack[-1].append(this)
+        elif g.level(next) > g.level(this):
+            # print(3)
+            node_stack.append(this)
+            children_stack.append([])
+        elif g.level(next) < g.level(this):
+            # print(4)
+            children_stack[-1].append(this)
+            n = node_stack.pop()
+            c = children_stack.pop()
+            layered = g.add_children(n, c)
+            children_stack[-1].append(layered)
+        # print(node_stack, children_stack, sep="\n")
+
+    while node_stack:
+        # print(node_stack, children_stack, sep="\n", end="\n\n")
+        n = node_stack.pop()
+        c = children_stack.pop()
+        layered = g.add_children(n, c)
+
+        if children_stack:
+            # print(node_stack, children_stack, sep="\n")
+            children_stack[-1].append(layered)
+        else:
+            # print(node_stack, children_stack, sep="\n")
+            return layered
+
+
+def root_node() -> dict:
+    return g.Node(section="$root")
