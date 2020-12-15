@@ -1,5 +1,14 @@
 from docstring_to_readme import graph as g
 
+from typing import IO
+
+
+__all__ = ["dump", "dumps"]
+
+
+def dump(handler: IO, graph: dict) -> None:
+    handler.write(dumps(graph))
+
 
 def dumps(graph: dict) -> str:
     if not graph:

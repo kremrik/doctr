@@ -4,6 +4,9 @@ from collections import deque
 from typing import IO, List, Tuple
 
 
+__all__ = ["load", "loads"]
+
+
 def load(handler: IO) -> dict:
     return loads(handler.read())
 
