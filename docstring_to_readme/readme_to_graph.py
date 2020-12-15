@@ -1,7 +1,11 @@
 from docstring_to_readme import graph as g
 
 from collections import deque
-from typing import List, Tuple
+from typing import IO, List, Tuple
+
+
+def load(handler: IO) -> dict:
+    return loads(handler.read())
 
 
 def loads(readme: str) -> dict:

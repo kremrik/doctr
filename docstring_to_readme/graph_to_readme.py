@@ -1,0 +1,32 @@
+from docstring_to_readme import graph as g
+
+
+def dumps(graph: dict) -> str:
+    if not graph:
+        return ""
+
+    section = g.node_section(graph)
+    body = g.node_body(graph)
+
+    children = "\n\n".join(
+        child
+        for child in [
+            dumps(c) for c in g.node_children(graph)
+        ]
+        if child
+    )
+
+    if section == "$root":
+        print("root")
+        return children
+
+    if body and children:
+        return section + "\n" + body + "\n\n" + children
+
+    if not body and not children:
+        print("not body and not children")
+        return section
+
+    if body and not children:
+        print("body and not children")
+        return section + "\n" + body
