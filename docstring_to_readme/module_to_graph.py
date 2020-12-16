@@ -21,11 +21,29 @@ the module node get?)
 
 
 def loads(module: str) -> dict:
-    pass
+    if not module:
+        return {}
+
+    as_ast = module_to_ast(module)
+
+    graphs = [
+        graph
+        for graph in module_to_graphs(as_ast)
+        if graph
+    ]
+
+    if not graphs:
+        return {}
+
+    return graphs
 
 
 def module_to_ast(module: str) -> ast.Module:
     return ast.parse(module)
+
+
+def module_to_graphs(module: ast.Module) -> List[dict]:
+    return [obj_to_graph(obj) for obj in module.body]
 
 
 def obj_to_graph(
@@ -34,14 +52,23 @@ def obj_to_graph(
     docstring = ast.get_docstring(obj)
     preamble = preamble_from_docstring(docstring)
     example = example_from_rst_docstring(docstring)
-
     section = obj.name
-    body = preamble + "\n" + example
 
+    if not preamble and not example:
+        return {}
+
+    if preamble and not example:
+        return g.Node(section=section, body=preamble)
+
+    body = preamble + "\n" + example
     return g.Node(section=section, body=body)
 
 
 def preamble_from_docstring(docstring: str) -> str:
+    """
+    Return falsy if nothing found at top of docstring
+    """
+
     # https://stackoverflow.com/questions/13209288/split-string-based-on-regex
     RST_BLOCKS = re.compile(r"[\n](?=[A-Z][a-z]+:\n)")
     RST_SECTION = re.compile(r"[A-Z][a-z]+:\n")
@@ -58,6 +85,10 @@ def preamble_from_docstring(docstring: str) -> str:
 
 
 def example_from_rst_docstring(docstring: str) -> str:
+    """
+    Return falsy if no `Examples:` block found
+    """
+
     examples_block = "Examples:"
     hlite = ".. highlight::"
     cbloc = ".. code-block::"
