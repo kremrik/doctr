@@ -7,6 +7,9 @@ import os
 from typing import List, Optional
 
 
+__all__ = ["package_to_graph"]
+
+
 def package_to_graph(path: str, level: int = 2) -> dict:
     if path.endswith("/"):
         path = path[:-1]

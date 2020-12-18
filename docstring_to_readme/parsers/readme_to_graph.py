@@ -4,14 +4,10 @@ from collections import deque
 from typing import IO, List, Tuple
 
 
-__all__ = ["load", "loads"]
+__all__ = ["readme_to_graph"]
 
 
-def load(handler: IO) -> dict:
-    return loads(handler.read())
-
-
-def loads(readme: str) -> dict:
+def readme_to_graph(readme: str) -> dict:
     if not readme:
         return root_node()
 

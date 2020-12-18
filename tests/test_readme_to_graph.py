@@ -1,5 +1,5 @@
 from docstring_to_readme.parsers.readme_to_graph import (
-    loads,
+    readme_to_graph,
 )
 import unittest
 
@@ -13,7 +13,7 @@ class test_readme_to_graph(unittest.TestCase):
             "body": "",
             "children": [],
         }
-        output = loads(readme)
+        output = readme_to_graph(readme)
         self.assertEqual(gold, output)
 
     @unittest.skip("")
@@ -21,7 +21,7 @@ class test_readme_to_graph(unittest.TestCase):
         # TODO: this behavior might need to change
         readme = "Some text"
         gold = {}
-        output = loads(readme)
+        output = readme_to_graph(readme)
         self.assertEqual(gold, output)
 
     def test_section_no_body_no_children(self):
@@ -39,7 +39,7 @@ class test_readme_to_graph(unittest.TestCase):
                 }
             ],
         }
-        output = loads(readme)
+        output = readme_to_graph(readme)
         print(output)
         self.assertEqual(gold, output)
 
@@ -72,7 +72,7 @@ class test_readme_to_graph(unittest.TestCase):
                 }
             ],
         }
-        output = loads(readme)
+        output = readme_to_graph(readme)
         print(output)
         self.assertEqual(gold, output)
 
@@ -104,7 +104,7 @@ class test_readme_to_graph(unittest.TestCase):
                 }
             ],
         }
-        output = loads(readme)
+        output = readme_to_graph(readme)
         self.assertEqual(gold, output)
 
     def test_variable_level_children(self):
@@ -142,7 +142,7 @@ class test_readme_to_graph(unittest.TestCase):
                 }
             ],
         }
-        output = loads(readme)
+        output = readme_to_graph(readme)
         self.assertEqual(gold, output)
 
 
