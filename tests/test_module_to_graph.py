@@ -1,73 +1,88 @@
-from docstring_to_readme.module_to_graph import loads
+from docstring_to_readme.module_to_graph import (
+    ast_to_graph,
+)
+import ast
 import unittest
 
 
-EMPTY_MODULE = ""
+EMPTY_MODULE = ast.parse("""""")
 
-ONE_FNC_NO_DOCSTRING = """
-def fnc(x):
-    print(x)
+ONE_FNC_NO_PREAMBLE = ast.parse(
+    """
+def test(x):
+    '''some text'''
+    pass
 """
+)
 
-ONE_FNC_W_DOCSTRING_NO_EXAMPLE = """
-def fnc(x):
-    '''This fnc does things'''
-    print(x)
+TWO_FNC_W_PREAMBLE = ast.parse(
+    """
+'''this is an intro'''
+
+def test(x):
+    '''some text'''
+    pass
+
+def test2(x):
+    '''some text2'''
+    pass
 """
-
-ONE_FNC_W_DOCSTRING_W_EXAMPLE = """
-def fnc(x):
-    '''This fnc does things
-    
-    Examples:
-        >>> from foo import bar
-    '''
-    print(x)
-"""
+)
 
 
-class test_loads(unittest.TestCase):
+class test_ast_to_graph(unittest.TestCase):
     def test_empty_module(self):
         module = EMPTY_MODULE
+        name = "test"
+        level = 3
         gold = {}
-        output = loads(module)
+        output = ast_to_graph(module, name, level)
         self.assertEqual(gold, output)
 
-    def test_module_with_one_fnc_no_docstrings(self):
-        module = ONE_FNC_NO_DOCSTRING
-        gold = {}
-        output = loads(module)
+    def test_one_fnc_no_preamble(self):
+        module = ONE_FNC_NO_PREAMBLE
+        name = "module"
+        level = 3
+        gold = {
+            "section": "### module",
+            "pretty_section": "### module",
+            "body": "",
+            "children": [
+                {
+                    "section": "#### test",
+                    "pretty_section": "#### test",
+                    "body": "some text",
+                    "children": [],
+                }
+            ],
+        }
+        output = ast_to_graph(module, name, level)
         self.assertEqual(gold, output)
 
-    def test_module_with_one_fnc_w_docstring_no_example(
-        self,
-    ):
-        module = ONE_FNC_W_DOCSTRING_NO_EXAMPLE
-        gold = [
-            {
-                "section": "fnc",
-                "pretty_section": "fnc",
-                "body": "This fnc does things",
-                "children": [],
-            }
-        ]
-        output = loads(module)
-        self.assertEqual(gold, output)
-
-    def test_module_with_one_fnc_w_docstring_w_example(
-        self,
-    ):
-        module = ONE_FNC_W_DOCSTRING_W_EXAMPLE
-        gold = [
-            {
-                "section": "fnc",
-                "pretty_section": "fnc",
-                "body": "This fnc does things\n```python\n>>> from foo import bar\n```",
-                "children": [],
-            }
-        ]
-        output = loads(module)
-        print(output)
+    def test_two_fnc_w_preamble(self):
+        module = TWO_FNC_W_PREAMBLE
+        name = "module"
+        level = 3
+        gold = {
+            "section": "### module",
+            "pretty_section": "### module",
+            "body": "this is an intro",
+            "children": [
+                {
+                    "section": "#### test",
+                    "pretty_section": "#### test",
+                    "body": "some text",
+                    "children": [],
+                },
+                {
+                    "section": "#### test2",
+                    "pretty_section": "#### test2",
+                    "body": "some text2",
+                    "children": [],
+                },
+            ],
+        }
+        output = ast_to_graph(module, name, level)
         self.assertEqual(gold, output)
 
 
