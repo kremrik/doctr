@@ -5,6 +5,9 @@ import re
 from typing import Union
 
 
+__all__ = ["function_to_graph"]
+
+
 def function_to_graph(
     obj: Union[ast.FunctionDef, ast.ClassDef], level: int
 ) -> dict:

@@ -8,6 +8,9 @@ from typing import List
 from os.path import basename, splitext
 
 
+__all__ = ["module_to_graph"]
+
+
 def module_to_graph(path: str, level: int = 3) -> dict:
     name = splitext(basename(path))[0]
     module = read_module(path)
@@ -21,8 +24,12 @@ def module_to_graph(path: str, level: int = 3) -> dict:
 
 
 def read_module(path: str) -> ast.Module:
-    with open(path, "r") as m:
-        return module_to_ast(m.read())
+    try:
+        with open(path, "r") as m:
+            return module_to_ast(m.read())
+    except FileNotFoundError:
+        print(f"Module '{path}' does not exist")
+        exit(1)
 
 
 def module_to_ast(module: str) -> ast.Module:
