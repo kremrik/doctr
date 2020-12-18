@@ -1,4 +1,6 @@
-from docstring_to_readme.readme_to_graph import loads
+from docstring_to_readme.parsers.readme_to_graph import (
+    loads,
+)
 import unittest
 
 

@@ -1,5 +1,5 @@
 from docstring_to_readme import graph as g
-from docstring_to_readme.module_to_graph import (
+from docstring_to_readme.parsers.module_to_graph import (
     module_to_graph,
 )
 

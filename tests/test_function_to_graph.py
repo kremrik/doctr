@@ -1,4 +1,4 @@
-from docstring_to_readme.function_to_graph import (
+from docstring_to_readme.parsers.function_to_graph import (
     function_to_graph,
 )
 import ast
