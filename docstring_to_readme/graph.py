@@ -14,7 +14,8 @@ def Node(
 
     return {
         "section": section,
-        "pretty_section": pretty_section or section,
+        "pretty_section": pretty_section
+        or _p_section(section),
         "body": body,
         "children": children or [],
     }
@@ -72,7 +73,7 @@ def get_child_node(node: dict, section: str) -> dict:
 
 
 def level(node: dict) -> int:
-    sect = node_p_section(node)
+    sect = node_section(node)
     levl = sect.count("#")
     return levl
 
