@@ -130,6 +130,50 @@ class test_graph_to_readme(unittest.TestCase):
         output = dumps(graph)
         self.assertEqual(gold, output)
 
+    def test_variable_children_of_root(self):
+        graph = {
+            "section": "$root",
+            "pretty_section": "$root",
+            "body": "",
+            "children": [
+                {
+                    "section": "# Title",
+                    "pretty_section": "# Title",
+                    "body": "",
+                    "children": [
+                        {
+                            "section": "## Purpose",
+                            "pretty_section": "## Purpose",
+                            "body": "test",
+                            "children": [],
+                        }
+                    ],
+                },
+                {
+                    "section": "### temp",
+                    "pretty_section": "### temp",
+                    "body": "Top level docstring",
+                    "children": [
+                        {
+                            "section": "#### bar",
+                            "pretty_section": "#### bar",
+                            "body": "this is bar",
+                            "children": [],
+                        },
+                        {
+                            "section": "#### baz",
+                            "pretty_section": "#### baz",
+                            "body": "this is baz\n```python\n>>> from temp import baz\n```",
+                            "children": [],
+                        },
+                    ],
+                },
+            ],
+        }
+        gold = "# Title\n\n## Purpose\ntest\n\n### temp\nTop level docstring\n\n#### bar\nthis is bar\n\n#### baz\nthis is baz\n```python\n>>> from temp import baz\n```"
+        output = dumps(graph)
+        self.assertEqual(gold, output)
+
 
 if __name__ == "__main__":
     unittest.main()

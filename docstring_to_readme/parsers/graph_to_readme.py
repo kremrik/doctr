@@ -31,6 +31,9 @@ def dumps(graph: dict) -> str:
     if body and children:
         return section + "\n" + body + "\n\n" + children
 
+    if not body and children:
+        return section + "\n\n" + children
+
     if not body and not children:
         return section
 

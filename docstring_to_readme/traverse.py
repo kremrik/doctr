@@ -1,5 +1,7 @@
 from docstring_to_readme import graph as g
 
+from copy import deepcopy
+
 
 __all__ = ["update"]
 
@@ -7,6 +9,8 @@ __all__ = ["update"]
 def update(graph1: dict, graph2: dict) -> dict:
     if graph1 == graph2:
         return {}
+
+    graph1 = deepcopy(graph1)
 
     if not contains(graph1, graph2):
         children = g.node_children(graph1)

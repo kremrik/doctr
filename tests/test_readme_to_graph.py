@@ -40,7 +40,6 @@ class test_readme_to_graph(unittest.TestCase):
             ],
         }
         output = readme_to_graph(readme)
-        print(output)
         self.assertEqual(gold, output)
 
     def test_increasingly_nested(self):
@@ -73,7 +72,6 @@ class test_readme_to_graph(unittest.TestCase):
             ],
         }
         output = readme_to_graph(readme)
-        print(output)
         self.assertEqual(gold, output)
 
     def test_mult_same_level_children(self):

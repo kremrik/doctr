@@ -12,11 +12,17 @@ from sys import argv
 from typing import Callable, List
 
 
-def selector(path: str) -> Callable:
-    # TODO: only handling one level of package nesting
-    if isdir(path):
-        return package_to_graph.package_to_graph
-    return module_to_graph.module_to_graph
+def main(arguments: List[str]) -> None:
+    args = cli(arguments)
+    path = args.path
+    level = args.level
+    readme = args.readme
+
+    updated_graph = update_readme_graph(
+        readme_path=readme, doc_path=path, level=level
+    )
+
+    update_readme(graph=updated_graph, path=readme)
 
 
 def update_readme_graph(
@@ -25,12 +31,25 @@ def update_readme_graph(
     readme_graph = readme_to_graph.readme_to_graph(
         open(readme_path, "r").read()
     )
+
     doc_graph = selector(doc_path)(doc_path, level)
-    return update(readme_graph, doc_graph)
+    updated = update(readme_graph, doc_graph)
+
+    return updated
+
+
+def selector(path: str) -> Callable:
+    # TODO: only handling one level of package nesting
+    if isdir(path):
+        return package_to_graph.package_to_graph
+    return module_to_graph.module_to_graph
 
 
 def update_readme(graph: dict, path: str) -> None:
+    from json import dumps
+
     to_markdown = graph_to_readme.dumps(graph)
+
     with open(path, "w") as readme:
         readme.write(to_markdown)
 
@@ -43,7 +62,7 @@ def cli(arguments: List[str]) -> argparse.Namespace:
         "-p",
         type=str,
         required=True,
-        help="Path to package or module",
+        help="[REQUIRED] Path to package or module",
     )
 
     parser.add_argument(
@@ -68,4 +87,4 @@ def cli(arguments: List[str]) -> argparse.Namespace:
 
 
 if __name__ == "__main__":
-    cli(argv[1:])
+    main(argv[1:])
