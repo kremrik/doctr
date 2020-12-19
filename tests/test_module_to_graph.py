@@ -1,3 +1,4 @@
+from docstring_to_readme import graph as g
 from docstring_to_readme.parsers.module_to_graph import (
     ast_to_graph,
 )
@@ -35,7 +36,7 @@ class test_ast_to_graph(unittest.TestCase):
         module = EMPTY_MODULE
         name = "test"
         level = 3
-        gold = {}
+        gold = g.Node()
         output = ast_to_graph(module, name, level)
         self.assertEqual(gold, output)
 
@@ -43,19 +44,14 @@ class test_ast_to_graph(unittest.TestCase):
         module = ONE_FNC_NO_PREAMBLE
         name = "module"
         level = 3
-        gold = {
-            "section": "### module",
-            "pretty_section": "### module",
-            "body": "",
-            "children": [
-                {
-                    "section": "#### test",
-                    "pretty_section": "#### test",
-                    "body": "some text",
-                    "children": [],
-                }
+        gold = g.Node(
+            section="### module",
+            children=[
+                g.Node(
+                    section="#### test", body="some text"
+                )
             ],
-        }
+        )
         output = ast_to_graph(module, name, level)
         self.assertEqual(gold, output)
 
@@ -63,25 +59,18 @@ class test_ast_to_graph(unittest.TestCase):
         module = TWO_FNC_W_PREAMBLE
         name = "module"
         level = 3
-        gold = {
-            "section": "### module",
-            "pretty_section": "### module",
-            "body": "this is an intro",
-            "children": [
-                {
-                    "section": "#### test",
-                    "pretty_section": "#### test",
-                    "body": "some text",
-                    "children": [],
-                },
-                {
-                    "section": "#### test2",
-                    "pretty_section": "#### test2",
-                    "body": "some text2",
-                    "children": [],
-                },
+        gold = g.Node(
+            section="### module",
+            body="this is an intro",
+            children=[
+                g.Node(
+                    section="#### test", body="some text"
+                ),
+                g.Node(
+                    section="#### test2", body="some text2"
+                ),
             ],
-        }
+        )
         output = ast_to_graph(module, name, level)
         self.assertEqual(gold, output)
 

@@ -1,135 +1,90 @@
-from docstring_to_readme.traverse import update
+from docstring_to_readme import graph as g
+from docstring_to_readme.traverse import update, contains
 import unittest
 
 
 class test_update(unittest.TestCase):
-
-    # @unittest.skip("")
     def test_same_graph(self):
-        graph1 = {
-            "section": "# Title",
-            "pretty_section": "# Title",
-            "body": "Some text",
-            "children": [],
-        }
-        graph2 = {
-            "section": "# Title",
-            "pretty_section": "# Title",
-            "body": "Some text",
-            "children": [],
-        }
-        gold = {}
+        graph1 = g.Node(
+            section="# Title", body="Some text"
+        )
+        graph2 = g.Node(
+            section="# Title", body="Some text"
+        )
+        gold = g.Node()
+
         output = update(graph1, graph2)
         self.assertEqual(gold, output)
 
-    # @unittest.skip("")
     def test_append_new_node(self):
-        graph1 = {
-            "section": "# Title",
-            "pretty_section": "# Title",
-            "body": "",
-            "children": [
-                {
-                    "section": "## Subtitle",
-                    "pretty_section": "## Subtitle",
-                    "body": "text",
-                    "children": [],
-                }
+        graph1 = g.Node(
+            section="# Title",
+            children=[
+                g.Node(section="## Subtitle", body="text")
             ],
-        }
-        graph2 = {
-            "section": "## Subtitle 2",
-            "pretty_section": "## Subtitle 2",
-            "body": "text",
-            "children": [],
-        }
-        gold = {
-            "section": "# Title",
-            "pretty_section": "# Title",
-            "body": "",
-            "children": [
-                {
-                    "section": "## Subtitle",
-                    "pretty_section": "## Subtitle",
-                    "body": "text",
-                    "children": [],
-                },
-                {
-                    "section": "## Subtitle 2",
-                    "pretty_section": "## Subtitle 2",
-                    "body": "text",
-                    "children": [],
-                },
+        )
+        graph2 = g.Node(
+            section="## Subtitle 2", body="text"
+        )
+        gold = g.Node(
+            section="# Title",
+            children=[
+                g.Node(section="## Subtitle", body="text"),
+                g.Node(
+                    section="## Subtitle 2", body="text"
+                ),
             ],
-        }
+        )
+
         output = update(graph1, graph2)
         self.assertEqual(gold, output)
 
-    # @unittest.skip("")
     def test_remove_child_node(self):
-        graph1 = {
-            "section": "# Title",
-            "pretty_section": "# Title",
-            "body": "",
-            "children": [
-                {
-                    "section": "## Subtitle",
-                    "pretty_section": "## Subtitle",
-                    "body": "text",
-                    "children": [],
-                }
+        graph1 = g.Node(
+            section="# Title",
+            children=[
+                g.Node(section="## Subtitle", body="text")
             ],
-        }
-        graph2 = {
-            "section": "## Subtitle",
-            "pretty_section": "## Subtitle",
-            "body": "",
-            "children": [],
-        }
-        gold = {
-            "section": "# Title",
-            "pretty_section": "# Title",
-            "body": "",
-            "children": [],
-        }
+        )
+        graph2 = g.Node(section="## Subtitle")
+        gold = g.Node(section="# Title")
+
         output = update(graph1, graph2)
         self.assertEqual(gold, output)
 
-    # @unittest.skip("")
     def test_update_child_node(self):
-        graph1 = {
-            "section": "# Title",
-            "pretty_section": "# Title",
-            "body": "",
-            "children": [
-                {
-                    "section": "## Subtitle",
-                    "pretty_section": "## Subtitle",
-                    "body": "text",
-                    "children": [],
-                }
+        graph1 = g.Node(
+            section="# Title",
+            children=[
+                g.Node(section="## Subtitle", body="text")
             ],
-        }
-        graph2 = {
-            "section": "## Subtitle",
-            "pretty_section": "## Subtitle",
-            "body": "NEW TEXT",
-            "children": [],
-        }
-        gold = {
-            "section": "# Title",
-            "pretty_section": "# Title",
-            "body": "",
-            "children": [
-                {
-                    "section": "## Subtitle",
-                    "pretty_section": "## Subtitle",
-                    "body": "NEW TEXT",
-                    "children": [],
-                }
+        )
+        graph2 = g.Node(
+            section="## Subtitle", body="NEW TEXT"
+        )
+        gold = g.Node(
+            section="# Title",
+            children=[
+                g.Node(
+                    section="## Subtitle", body="NEW TEXT"
+                )
             ],
-        }
+        )
+
         output = update(graph1, graph2)
+        self.assertEqual(gold, output)
+
+
+class test_contains(unittest.TestCase):
+    def test_different_section_same_p_section(self):
+        graph1 = g.Node(
+            section="# Title", body="Some text"
+        )
+        graph2 = g.Node(
+            section="# Title", body="Some text"
+        )
+        gold = True
+        output = contains(graph1, graph2)
         self.assertEqual(gold, output)
 
 

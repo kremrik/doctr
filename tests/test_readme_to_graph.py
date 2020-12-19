@@ -1,3 +1,4 @@
+from docstring_to_readme import graph as g
 from docstring_to_readme.parsers.readme_to_graph import (
     readme_to_graph,
 )
@@ -7,12 +8,7 @@ import unittest
 class test_readme_to_graph(unittest.TestCase):
     def test_null_readme(self):
         readme = ""
-        gold = {
-            "section": "$root",
-            "pretty_section": "$root",
-            "body": "",
-            "children": [],
-        }
+        gold = g.Node(section="$root")
         output = readme_to_graph(readme)
         self.assertEqual(gold, output)
 
@@ -26,120 +22,90 @@ class test_readme_to_graph(unittest.TestCase):
 
     def test_section_no_body_no_children(self):
         readme = "# Title"
-        gold = {
-            "section": "$root",
-            "pretty_section": "$root",
-            "body": "",
-            "children": [
-                {
-                    "section": "# Title",
-                    "pretty_section": "# Title",
-                    "body": "",
-                    "children": [],
-                }
-            ],
-        }
+        gold = g.Node(
+            section="$root",
+            children=[g.Node(section="# Title")],
+        )
         output = readme_to_graph(readme)
         self.assertEqual(gold, output)
 
     def test_increasingly_nested(self):
         readme = "# Title\nText\n\n## Subtitle\nMore text\n\n### Sub-subtitle\neven more text"
-        gold = {
-            "section": "$root",
-            "pretty_section": "$root",
-            "body": "",
-            "children": [
-                {
-                    "section": "# Title",
-                    "pretty_section": "# Title",
-                    "body": "Text",
-                    "children": [
-                        {
-                            "section": "## Subtitle",
-                            "pretty_section": "## Subtitle",
-                            "body": "More text",
-                            "children": [
-                                {
-                                    "section": "### Sub-subtitle",
-                                    "pretty_section": "### Sub-subtitle",
-                                    "body": "even more text",
-                                    "children": [],
-                                }
+        gold = g.Node(
+            section="$root",
+            children=[
+                g.Node(
+                    section="# Title",
+                    body="Text",
+                    children=[
+                        g.Node(
+                            section="## Subtitle",
+                            body="More text",
+                            children=[
+                                g.Node(
+                                    section="### Sub-subtitle",
+                                    body="even more text",
+                                )
                             ],
-                        }
+                        )
                     ],
-                }
+                )
             ],
-        }
+        )
         output = readme_to_graph(readme)
         self.assertEqual(gold, output)
 
     def test_mult_same_level_children(self):
         readme = "# Title\nText\n\n## Subtitle\nMore text\n\n## Subtitle 2\neven more text"
-        gold = {
-            "section": "$root",
-            "pretty_section": "$root",
-            "body": "",
-            "children": [
-                {
-                    "section": "# Title",
-                    "pretty_section": "# Title",
-                    "body": "Text",
-                    "children": [
-                        {
-                            "section": "## Subtitle",
-                            "pretty_section": "## Subtitle",
-                            "body": "More text",
-                            "children": [],
-                        },
-                        {
-                            "section": "## Subtitle 2",
-                            "pretty_section": "## Subtitle 2",
-                            "body": "even more text",
-                            "children": [],
-                        },
+        gold = g.Node(
+            section="$root",
+            children=[
+                g.Node(
+                    section="# Title",
+                    body="Text",
+                    children=[
+                        g.Node(
+                            section="## Subtitle",
+                            body="More text",
+                        ),
+                        g.Node(
+                            section="## Subtitle 2",
+                            body="even more text",
+                        ),
                     ],
-                }
+                )
             ],
-        }
+        )
         output = readme_to_graph(readme)
         self.assertEqual(gold, output)
 
     def test_variable_level_children(self):
         readme = "# Title\nText\n\n## Subtitle\nText\n\n### Subtitle 2\nText\n\n## Subtitle 3\nText"
-        gold = {
-            "section": "$root",
-            "pretty_section": "$root",
-            "body": "",
-            "children": [
-                {
-                    "section": "# Title",
-                    "pretty_section": "# Title",
-                    "body": "Text",
-                    "children": [
-                        {
-                            "section": "## Subtitle",
-                            "pretty_section": "## Subtitle",
-                            "body": "Text",
-                            "children": [
-                                {
-                                    "section": "### Subtitle 2",
-                                    "pretty_section": "### Subtitle 2",
-                                    "body": "Text",
-                                    "children": [],
-                                }
+        gold = g.Node(
+            section="$root",
+            children=[
+                g.Node(
+                    section="# Title",
+                    body="Text",
+                    children=[
+                        g.Node(
+                            section="## Subtitle",
+                            body="Text",
+                            children=[
+                                g.Node(
+                                    section="### Subtitle 2",
+                                    body="Text",
+                                )
                             ],
-                        },
-                        {
-                            "section": "## Subtitle 3",
-                            "pretty_section": "## Subtitle 3",
-                            "body": "Text",
-                            "children": [],
-                        },
+                        ),
+                        g.Node(
+                            section="## Subtitle 3",
+                            body="Text",
+                        ),
                     ],
-                }
+                )
             ],
-        }
+        )
         output = readme_to_graph(readme)
         self.assertEqual(gold, output)
 

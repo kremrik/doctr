@@ -35,6 +35,8 @@ def update_readme_graph(
     doc_graph = selector(doc_path)(doc_path, level)
     updated = update(readme_graph, doc_graph)
 
+    print(readme_graph, doc_graph, sep="\n\n")
+
     return updated
 
 

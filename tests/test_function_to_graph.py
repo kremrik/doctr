@@ -1,3 +1,4 @@
+from docstring_to_readme import graph as g
 from docstring_to_readme.parsers.function_to_graph import (
     function_to_graph,
 )
@@ -37,7 +38,7 @@ class test_function_to_graph(unittest.TestCase):
     def test_module_with_one_fnc_no_docstrings(self):
         module = ONE_FNC_NO_DOCSTRING
         level = 4
-        gold = {}
+        gold = g.Node()
         output = function_to_graph(module, level)
         self.assertEqual(gold, output)
 
@@ -46,12 +47,9 @@ class test_function_to_graph(unittest.TestCase):
     ):
         module = ONE_FNC_W_DOCSTRING_NO_EXAMPLE
         level = 4
-        gold = {
-            "section": "#### fnc",
-            "pretty_section": "#### fnc",
-            "body": "This fnc does things",
-            "children": [],
-        }
+        gold = g.Node(
+            section="#### fnc", body="This fnc does things"
+        )
         output = function_to_graph(module, level)
         self.assertEqual(gold, output)
 
@@ -60,12 +58,10 @@ class test_function_to_graph(unittest.TestCase):
     ):
         module = ONE_FNC_W_DOCSTRING_W_EXAMPLE
         level = 4
-        gold = {
-            "section": "#### fnc",
-            "pretty_section": "#### fnc",
-            "body": "This fnc does things\n```python\n>>> from foo import bar\n```",
-            "children": [],
-        }
+        gold = g.Node(
+            section="#### fnc",
+            body="This fnc does things\n```python\n>>> from foo import bar\n```",
+        )
         output = function_to_graph(module, level)
         self.assertEqual(gold, output)
 

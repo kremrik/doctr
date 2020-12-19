@@ -20,6 +20,10 @@ def Node(
     }
 
 
+def _p_section(section: str) -> str:
+    return section.replace("#", "").lstrip()
+
+
 # implementation-agnostic node attribute accessors
 # ---------------------------------------------------------
 def node_section(node: dict) -> str:

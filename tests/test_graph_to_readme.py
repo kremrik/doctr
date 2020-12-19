@@ -1,3 +1,4 @@
+from docstring_to_readme import graph as g
 from docstring_to_readme.parsers.graph_to_readme import (
     dumps,
 )
@@ -6,170 +7,129 @@ import unittest
 
 class test_graph_to_readme(unittest.TestCase):
     def test_null_graph(self):
-        graph = {}
+        graph = g.Node()
         gold = ""
         output = dumps(graph)
         self.assertEqual(gold, output)
 
     def test_section_no_body_no_children(self):
-        graph = {
-            "section": "$root",
-            "pretty_section": "$root",
-            "body": "",
-            "children": [
-                {
-                    "section": "# Title",
-                    "pretty_section": "# Title",
-                    "body": "",
-                    "children": [],
-                }
-            ],
-        }
+        graph = g.Node(
+            section="$root",
+            children=[g.Node(section="# Title")],
+        )
         gold = "# Title"
         output = dumps(graph)
         self.assertEqual(gold, output)
 
     def test_increasingly_nested(self):
-        graph = {
-            "section": "$root",
-            "pretty_section": "$root",
-            "body": "",
-            "children": [
-                {
-                    "section": "# Title",
-                    "pretty_section": "# Title",
-                    "body": "Text",
-                    "children": [
-                        {
-                            "section": "## Subtitle",
-                            "pretty_section": "## Subtitle",
-                            "body": "More text",
-                            "children": [
-                                {
-                                    "section": "### Sub-subtitle",
-                                    "pretty_section": "### Sub-subtitle",
-                                    "body": "even more text",
-                                    "children": [],
-                                }
+        graph = g.Node(
+            section="$root",
+            children=[
+                g.Node(
+                    section="# Title",
+                    body="Text",
+                    children=[
+                        g.Node(
+                            section="## Subtitle",
+                            body="More text",
+                            children=[
+                                g.Node(
+                                    section="### Sub-subtitle",
+                                    body="even more text",
+                                )
                             ],
-                        }
+                        )
                     ],
-                }
+                )
             ],
-        }
+        )
         gold = "# Title\nText\n\n## Subtitle\nMore text\n\n### Sub-subtitle\neven more text"
         output = dumps(graph)
         self.assertEqual(gold, output)
 
     def test_mult_same_level_children(self):
-        graph = {
-            "section": "$root",
-            "pretty_section": "$root",
-            "body": "",
-            "children": [
-                {
-                    "section": "# Title",
-                    "pretty_section": "# Title",
-                    "body": "Text",
-                    "children": [
-                        {
-                            "section": "## Subtitle",
-                            "pretty_section": "## Subtitle",
-                            "body": "More text",
-                            "children": [],
-                        },
-                        {
-                            "section": "## Subtitle 2",
-                            "pretty_section": "## Subtitle 2",
-                            "body": "even more text",
-                            "children": [],
-                        },
+        graph = g.Node(
+            section="$root",
+            children=[
+                g.Node(
+                    section="# Title",
+                    body="Text",
+                    children=[
+                        g.Node(
+                            section="## Subtitle",
+                            body="More text",
+                        ),
+                        g.Node(
+                            section="## Subtitle 2",
+                            body="even more text",
+                        ),
                     ],
-                }
+                )
             ],
-        }
+        )
         gold = "# Title\nText\n\n## Subtitle\nMore text\n\n## Subtitle 2\neven more text"
         output = dumps(graph)
         self.assertEqual(gold, output)
 
     def test_variable_level_children(self):
-        graph = {
-            "section": "$root",
-            "pretty_section": "$root",
-            "body": "",
-            "children": [
-                {
-                    "section": "# Title",
-                    "pretty_section": "# Title",
-                    "body": "Text",
-                    "children": [
-                        {
-                            "section": "## Subtitle",
-                            "pretty_section": "## Subtitle",
-                            "body": "Text",
-                            "children": [
-                                {
-                                    "section": "### Subtitle 2",
-                                    "pretty_section": "### Subtitle 2",
-                                    "body": "Text",
-                                    "children": [],
-                                }
+        graph = g.Node(
+            section="$root",
+            children=[
+                g.Node(
+                    section="# Title",
+                    body="Text",
+                    children=[
+                        g.Node(
+                            section="## Subtitle",
+                            body="Text",
+                            children=[
+                                g.Node(
+                                    section="### Subtitle 2",
+                                    body="Text",
+                                )
                             ],
-                        },
-                        {
-                            "section": "## Subtitle 3",
-                            "pretty_section": "## Subtitle 3",
-                            "body": "Text",
-                            "children": [],
-                        },
+                        ),
+                        g.Node(
+                            section="## Subtitle 3",
+                            body="Text",
+                        ),
                     ],
-                }
+                )
             ],
-        }
+        )
         gold = "# Title\nText\n\n## Subtitle\nText\n\n### Subtitle 2\nText\n\n## Subtitle 3\nText"
         output = dumps(graph)
         self.assertEqual(gold, output)
 
     def test_variable_children_of_root(self):
-        graph = {
-            "section": "$root",
-            "pretty_section": "$root",
-            "body": "",
-            "children": [
-                {
-                    "section": "# Title",
-                    "pretty_section": "# Title",
-                    "body": "",
-                    "children": [
-                        {
-                            "section": "## Purpose",
-                            "pretty_section": "## Purpose",
-                            "body": "test",
-                            "children": [],
-                        }
+        graph = g.Node(
+            section="$root",
+            children=[
+                g.Node(
+                    section="# Title",
+                    children=[
+                        g.Node(
+                            section="## Purpose",
+                            body="test",
+                        )
                     ],
-                },
-                {
-                    "section": "### temp",
-                    "pretty_section": "### temp",
-                    "body": "Top level docstring",
-                    "children": [
-                        {
-                            "section": "#### bar",
-                            "pretty_section": "#### bar",
-                            "body": "this is bar",
-                            "children": [],
-                        },
-                        {
-                            "section": "#### baz",
-                            "pretty_section": "#### baz",
-                            "body": "this is baz\n```python\n>>> from temp import baz\n```",
-                            "children": [],
-                        },
+                ),
+                g.Node(
+                    section="### temp",
+                    body="Top level docstring",
+                    children=[
+                        g.Node(
+                            section="#### bar",
+                            body="this is bar",
+                        ),
+                        g.Node(
+                            section="#### baz",
+                            body="this is baz\n```python\n>>> from temp import baz\n```",
+                        ),
                     ],
-                },
+                ),
             ],
-        }
+        )
         gold = "# Title\n\n## Purpose\ntest\n\n### temp\nTop level docstring\n\n#### bar\nthis is bar\n\n#### baz\nthis is baz\n```python\n>>> from temp import baz\n```"
         output = dumps(graph)
         self.assertEqual(gold, output)
