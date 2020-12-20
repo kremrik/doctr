@@ -126,7 +126,7 @@ def module_preamble(module: ast.Module) -> str:
     if not filt:
         return ""
 
-    return filt[0].value.s
+    return filt[0].value.s.strip()
 
 
 def convert_objects(
