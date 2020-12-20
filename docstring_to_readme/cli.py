@@ -31,9 +31,12 @@ def main(arguments: List[str]) -> None:
 def update_readme_graph(
     readme_path: str, doc_path: str, level: int
 ) -> dict:
-    readme_graph = readme_to_graph(
-        open(readme_path, "r").read()
-    )
+    try:
+        readme = open(readme_path, "r").read()
+    except FileNotFoundError:
+        readme = ""
+
+    readme_graph = readme_to_graph(readme)
 
     doc_graph = python_to_graph(doc_path, level)
     updated = update(readme_graph, doc_graph)
