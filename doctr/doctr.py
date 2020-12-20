@@ -13,17 +13,6 @@ from doctr.traverse import update
 from typing import List
 
 
-"""
-`doctr` (**DOC**string **T** **R**eadme) is a command-line
-tool that permits you to convert your docstrings into
-well-formated markdown for use in your README. Example:
-
-```
-$ doctr -p /path/to/file.py
-```
-"""
-
-
 def doctr(arguments: List[str]) -> None:
     args = cli(arguments)
     path = args.path

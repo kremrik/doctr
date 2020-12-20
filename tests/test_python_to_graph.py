@@ -49,7 +49,7 @@ class test_ast_to_graph(unittest.TestCase):
             section="### module",
             children=[
                 g.Node(
-                    section="#### test", body="some text"
+                    section="#### `test`", body="some text"
                 )
             ],
         )
@@ -65,10 +65,11 @@ class test_ast_to_graph(unittest.TestCase):
             body="this is an intro",
             children=[
                 g.Node(
-                    section="#### test", body="some text"
+                    section="#### `test`", body="some text"
                 ),
                 g.Node(
-                    section="#### test2", body="some text2"
+                    section="#### `test2`",
+                    body="some text2",
                 ),
             ],
         )
@@ -130,7 +131,8 @@ class test_function_to_graph(unittest.TestCase):
         module = ONE_FNC_W_DOCSTRING_NO_EXAMPLE
         level = 4
         gold = g.Node(
-            section="#### fnc", body="This fnc does things"
+            section="#### `fnc`",
+            body="This fnc does things",
         )
         output = function_to_graph(module, level)
         self.assertEqual(gold, output)
@@ -141,7 +143,7 @@ class test_function_to_graph(unittest.TestCase):
         module = ONE_FNC_W_DOCSTRING_W_EXAMPLES
         level = 4
         gold = g.Node(
-            section="#### fnc",
+            section="#### `fnc`",
             body="This fnc does things\n```python\n>>> from foo import bar\n```",
         )
         output = function_to_graph(module, level)
@@ -153,7 +155,7 @@ class test_function_to_graph(unittest.TestCase):
         module = ONE_FNC_W_DOCSTRING_W_EXAMPLE
         level = 4
         gold = g.Node(
-            section="#### fnc",
+            section="#### `fnc`",
             body="This fnc does things\n```python\n>>> from foo import bar\n```",
         )
         output = function_to_graph(module, level)

@@ -149,6 +149,7 @@ def function_to_graph(
     preamble = preamble_from_docstring(docstring)
     example = example_from_rst_docstring(docstring)
     section = obj.name
+    section = "`" + section + "`"
     section = "#" * level + " " + section
 
     if not preamble and not example:
