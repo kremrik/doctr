@@ -61,6 +61,11 @@ optional arguments:
 ```
 
 ## Usage
+
+#### Function-level documentation
 To properly format python examples in your docstrings, follow the Google-RST guide, which requires
 any example block to be denoted with an `Example:` or `Examples:` block.
 Any other specified blocks will be ignore, but any text at the top of the docstring will be included.
+
+#### Module-level documentation
+Any docstring at the top of a module will be included
