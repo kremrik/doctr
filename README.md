@@ -40,11 +40,11 @@ a module to just print 'foo' as many times as you want
 
 ### `foo`
 A function that prints 'foo'
-```python
+``python
 >>> from foo import foo
 >>> foo(3)
 # 'foofoofoo'
-```
+``
 ```
 
 ## CLI
