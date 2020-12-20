@@ -1,20 +1,23 @@
-from docstring_to_readme.parsers import (
-    module_to_graph,
-    package_to_graph,
+from docstring_to_readme.parsers.python_to_graph import (
+    python_to_graph,
+)
+from docstring_to_readme.parsers.readme_to_graph import (
     readme_to_graph,
-    graph_to_readme,
+)
+from docstring_to_readme.parsers.graph_to_readme import (
+    dumps,
 )
 from docstring_to_readme.traverse import update
 
 import argparse
-from os.path import isdir
 from sys import argv
-from typing import Callable, List
+from typing import List
 
 
 def main(arguments: List[str]) -> None:
     args = cli(arguments)
     path = args.path
+    path = path if not path.endswith("/") else path[:-1]
     level = args.level
     readme = args.readme
 
@@ -28,29 +31,18 @@ def main(arguments: List[str]) -> None:
 def update_readme_graph(
     readme_path: str, doc_path: str, level: int
 ) -> dict:
-    readme_graph = readme_to_graph.readme_to_graph(
+    readme_graph = readme_to_graph(
         open(readme_path, "r").read()
     )
 
-    doc_graph = selector(doc_path)(doc_path, level)
+    doc_graph = python_to_graph(doc_path, level)
     updated = update(readme_graph, doc_graph)
-
-    print(readme_graph, doc_graph, sep="\n\n")
 
     return updated
 
 
-def selector(path: str) -> Callable:
-    # TODO: only handling one level of package nesting
-    if isdir(path):
-        return package_to_graph.package_to_graph
-    return module_to_graph.module_to_graph
-
-
 def update_readme(graph: dict, path: str) -> None:
-    from json import dumps
-
-    to_markdown = graph_to_readme.dumps(graph)
+    to_markdown = dumps(graph)
 
     with open(path, "w") as readme:
         readme.write(to_markdown)

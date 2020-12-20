@@ -1,6 +1,7 @@
 from docstring_to_readme import graph as g
-from docstring_to_readme.parsers.module_to_graph import (
+from docstring_to_readme.parsers.python_to_graph import (
     ast_to_graph,
+    function_to_graph,
 )
 import ast
 import unittest
@@ -72,6 +73,66 @@ class test_ast_to_graph(unittest.TestCase):
             ],
         )
         output = ast_to_graph(module, name, level)
+        self.assertEqual(gold, output)
+
+
+ONE_FNC_NO_DOCSTRING = ast.parse(
+    """
+def fnc(x):
+    print(x)
+"""
+).body[0]
+
+ONE_FNC_W_DOCSTRING_NO_EXAMPLE = ast.parse(
+    """
+def fnc(x):
+    '''This fnc does things'''
+    print(x)
+"""
+).body[0]
+
+ONE_FNC_W_DOCSTRING_W_EXAMPLE = ast.parse(
+    """
+def fnc(x):
+    '''This fnc does things
+    
+    Examples:
+        >>> from foo import bar
+    '''
+    print(x)
+"""
+).body[0]
+
+
+class test_function_to_graph(unittest.TestCase):
+    def test_module_with_one_fnc_no_docstrings(self):
+        module = ONE_FNC_NO_DOCSTRING
+        level = 4
+        gold = g.Node()
+        output = function_to_graph(module, level)
+        self.assertEqual(gold, output)
+
+    def test_module_with_one_fnc_w_docstring_no_example(
+        self,
+    ):
+        module = ONE_FNC_W_DOCSTRING_NO_EXAMPLE
+        level = 4
+        gold = g.Node(
+            section="#### fnc", body="This fnc does things"
+        )
+        output = function_to_graph(module, level)
+        self.assertEqual(gold, output)
+
+    def test_module_with_one_fnc_w_docstring_w_example(
+        self,
+    ):
+        module = ONE_FNC_W_DOCSTRING_W_EXAMPLE
+        level = 4
+        gold = g.Node(
+            section="#### fnc",
+            body="This fnc does things\n```python\n>>> from foo import bar\n```",
+        )
+        output = function_to_graph(module, level)
         self.assertEqual(gold, output)
 
 
