@@ -4,7 +4,7 @@
 
 
 ## doctr
-`doctr` (**DOC**string **T** **R**eadme) is a command-line
+`doctr` (**DOC**string **T**o **R**eadme) is a command-line
 tool that permits you to convert your docstrings into
 well-formated markdown for use in your README. Example:
 
