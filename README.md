@@ -46,3 +46,21 @@ A function that prints 'foo'
 # 'foofoofoo'
 ```
 ```
+
+## CLI
+```
+usage: doctr.py [-h] --path PATH [--level LEVEL] [--readme README]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --path PATH, -p PATH  [REQUIRED] Path to package or module
+  --level LEVEL, -l LEVEL
+                        Number of '#' at top level
+  --readme README, -r README
+                        Path to README to update
+```
+
+## Usage
+To properly format python examples in your docstrings, follow the Google-RST guide, which requires
+any example block to be denoted with an `Example:` or `Examples:` block.
+Any other specified blocks will be ignore, but any text at the top of the docstring will be included.
