@@ -1,4 +1,4 @@
-from docstring_to_readme import graph as g
+from doctr import graph as g
 
 from collections import deque
 from typing import IO, List, Tuple

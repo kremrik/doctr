@@ -1,4 +1,4 @@
-from docstring_to_readme.graph import (
+from doctr.graph import (
     Node,
     node_section,
     node_body,

@@ -1,5 +1,5 @@
-from docstring_to_readme import graph as g
-from docstring_to_readme.parsers.python_to_graph import (
+from doctr import graph as g
+from doctr.parsers.python_to_graph import (
     ast_to_graph,
     function_to_graph,
 )

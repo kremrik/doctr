@@ -1,5 +1,5 @@
-from docstring_to_readme import graph as g
-from docstring_to_readme.traverse import update, contains
+from doctr import graph as g
+from doctr.traverse import update, contains
 import unittest
 
 

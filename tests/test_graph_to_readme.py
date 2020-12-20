@@ -1,5 +1,5 @@
-from docstring_to_readme import graph as g
-from docstring_to_readme.parsers.graph_to_readme import (
+from doctr import graph as g
+from doctr.parsers.graph_to_readme import (
     dumps,
 )
 import unittest

@@ -1,13 +1,13 @@
-from docstring_to_readme.parsers.python_to_graph import (
+from doctr.parsers.python_to_graph import (
     python_to_graph,
 )
-from docstring_to_readme.parsers.readme_to_graph import (
+from doctr.parsers.readme_to_graph import (
     readme_to_graph,
 )
-from docstring_to_readme.parsers.graph_to_readme import (
+from doctr.parsers.graph_to_readme import (
     dumps,
 )
-from docstring_to_readme.traverse import update
+from doctr.traverse import update
 
 import argparse
 from sys import argv
