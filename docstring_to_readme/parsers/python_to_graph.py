@@ -186,17 +186,26 @@ def example_from_rst_docstring(docstring: str) -> str:
     Return falsy if no `Examples:` block found
     """
 
-    examples_block = "Examples:"
+    examples_blocks = ["Example:", "Examples:"]
     hlite = ".. highlight::"
     cbloc = ".. code-block::"
 
     if not docstring:
         return ""
 
-    if examples_block not in docstring:
-        return ""
+    example_exists = [
+        example in docstring for example in examples_blocks
+    ]
+    pick_block = [
+        idx for idx, e in enumerate(example_exists) if e
+    ]
 
-    examples = docstring.split(examples_block)[1]
+    if not pick_block:
+        return ""
+    else:
+        example_block = examples_blocks[pick_block[0]]
+
+    examples = docstring.split(example_block)[1]
 
     lines_wo_rst_example = [
         line

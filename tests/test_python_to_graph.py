@@ -91,12 +91,24 @@ def fnc(x):
 """
 ).body[0]
 
-ONE_FNC_W_DOCSTRING_W_EXAMPLE = ast.parse(
+ONE_FNC_W_DOCSTRING_W_EXAMPLES = ast.parse(
     """
 def fnc(x):
     '''This fnc does things
     
     Examples:
+        >>> from foo import bar
+    '''
+    print(x)
+"""
+).body[0]
+
+ONE_FNC_W_DOCSTRING_W_EXAMPLE = ast.parse(
+    """
+def fnc(x):
+    '''This fnc does things
+    
+    Example:
         >>> from foo import bar
     '''
     print(x)
@@ -119,6 +131,18 @@ class test_function_to_graph(unittest.TestCase):
         level = 4
         gold = g.Node(
             section="#### fnc", body="This fnc does things"
+        )
+        output = function_to_graph(module, level)
+        self.assertEqual(gold, output)
+
+    def test_module_with_one_fnc_w_docstring_w_examples(
+        self,
+    ):
+        module = ONE_FNC_W_DOCSTRING_W_EXAMPLES
+        level = 4
+        gold = g.Node(
+            section="#### fnc",
+            body="This fnc does things\n```python\n>>> from foo import bar\n```",
         )
         output = function_to_graph(module, level)
         self.assertEqual(gold, output)
