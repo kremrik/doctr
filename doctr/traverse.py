@@ -36,7 +36,9 @@ def contains(search_graph: dict, find_graph: dict) -> bool:
 
     children = g.node_children(search_graph)
     for child in children:
-        return contains(child, find_graph)
+        res = contains(child, find_graph)
+        if res:
+            return True
 
     return False
 
@@ -77,10 +79,8 @@ def _modify(
         if res:
             new_children.append(res)
 
-        return g.Node(
-            section=g.node_section(mod_graph),
-            body=g.node_body(mod_graph),
-            children=new_children,
-        )
-
-    return mod_with
+    return g.Node(
+        section=g.node_section(mod_graph),
+        body=g.node_body(mod_graph),
+        children=new_children,
+    )
