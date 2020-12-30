@@ -78,10 +78,16 @@ class test_update(unittest.TestCase):
 class test_contains(unittest.TestCase):
     def test_different_section_same_p_section(self):
         graph1 = g.Node(
-            section="# Title", body="Some text"
+            section="$root",
+            children=[
+                g.Node(
+                    section="## Subtitle", body="Some text"
+                )
+            ],
         )
         graph2 = g.Node(
-            section="# Title", body="Some text"
+            section="### Subtitle",
+            body="Some different text",
         )
         gold = True
         output = contains(graph1, graph2)

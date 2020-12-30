@@ -36,7 +36,6 @@ def update_readme_graph(
         readme = ""
 
     readme_graph = readme_to_graph(readme)
-
     doc_graph = python_to_graph(doc_path, level)
     updated = update(readme_graph, doc_graph)
 
